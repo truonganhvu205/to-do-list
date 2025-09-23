@@ -1,5 +1,7 @@
 #### Description
 
+A basic CRUD To-do List.
+
 #### npm Packages
 
 ```

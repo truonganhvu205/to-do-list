@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const URI = 'mongodb://127.0.0.1/my_database'
+const URI = 'mongodb://127.0.0.1/petprojects'
 
 async function connect(req, res, next) {
     try{

@@ -1,1 +1,56 @@
-<h1>Home Page</h1>
+<div class="my-4">
+    <h3>To-do List</h3>
+    
+    <form method="POST" action="/">
+        <div class="my-4">
+            <input 
+            type="text" 
+            name="name" 
+            id="addTask" 
+            placeholder="Add new task ...">
+            <button type="submit" class="btn btn-link">Add</button>
+        </div>
+    </form>
+
+    <table class="table table-borderless">
+        <thead></thead>
+
+    {{#each list}}
+        <tbody>
+            <tr>
+                <td>
+                    <input type="checkbox" name="" id="{{this._id}}">
+                </td>
+                <td>
+                    <label for="{{this._id}}" id="">{{this.name}}</label>
+                    {{!-- <form method="POST" name="edit-form" action=""></form> --}}
+                </td>
+                <td>
+                    <span>
+                        {{!-- <button type="submit" class="btn btn-link">Edit</button> --}}
+                        <button 
+                        type="submit" 
+                        class="btn btn-link" 
+                        task-id="{{this._id}}">Delete</button>
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    {{/each}}
+    </table>
+</div>
+
+<form method="POST" name="delete-form" action=""></form>
+
+<script>
+    var taskId
+    const checkBox = document.querySelector('input[type=checkbox]')
+    var deleteBtn = document.querySelector('button[task-id]')
+    const deleteForm = document.forms['delete-form']
+
+    deleteBtn.addEventListener('click', () => {
+        taskId = deleteBtn.getAttribute('task-id')
+        deleteForm.action = `/${taskId}?_method=DELETE`
+        deleteForm.submit()
+    })
+</script>
