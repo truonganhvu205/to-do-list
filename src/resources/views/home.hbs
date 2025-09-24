@@ -6,7 +6,7 @@
             <input 
             type="text" 
             name="name" 
-            id="addTask" 
+            id="" 
             placeholder="Add new task ...">
             <button type="submit" class="btn btn-link">Add</button>
         </div>
@@ -22,16 +22,28 @@
                     <input type="checkbox" name="" id="{{this._id}}">
                 </td>
                 <td>
-                    <label for="{{this._id}}" id="">{{this.name}}</label>
-                    {{!-- <form method="POST" name="edit-form" action=""></form> --}}
+                    <label 
+                    for="{{this._id}}" 
+                    id="task-name"
+                    task-name-id="{{this._id}}">{{this.name}}</label>
+
+                    <div id="edit-form-display" class="d-none">
+                        <form method="POST" name="edit-form" action="">
+                            <input type="text" name="" id="">
+                        </form>
+                    </div>
                 </td>
                 <td>
                     <span>
-                        {{!-- <button type="submit" class="btn btn-link">Edit</button> --}}
+                        <button 
+                        type="submit" 
+                        class="btn btn-link"
+                        edit-id="{{this._id}}">Edit</button>
+
                         <button 
                         type="submit" 
                         class="btn btn-link" 
-                        task-id="{{this._id}}">Delete</button>
+                        delete-id="{{this._id}}">Delete</button>
                     </span>
                 </td>
             </tr>
@@ -43,14 +55,32 @@
 <form method="POST" name="delete-form" action=""></form>
 
 <script>
-    var taskId
-    const checkBox = document.querySelector('input[type=checkbox]')
-    var deleteBtn = document.querySelector('button[task-id]')
+    var editTaskId
+    var deleteTaskId
+    {{!-- const checkBox = document.querySelector('input[type=checkbox]') --}}
+
+    const taskName = document.querySelector('#task-name')
+    const editFormDisplay = document.querySelector('#edit-form-display')
+    const editBtns = document.querySelectorAll('button[edit-id]')
+    const editForm = document.forms['edit-form']
+
+    const deleteBtns = document.querySelectorAll('button[delete-id]')
     const deleteForm = document.forms['delete-form']
 
-    deleteBtn.addEventListener('click', () => {
-        taskId = deleteBtn.getAttribute('task-id')
-        deleteForm.action = `/${taskId}?_method=DELETE`
+    editBtns.forEach(editBtn => editBtn.addEventListener('click', () => {
+        {{!-- taskName.classList.add('d-none') --}}
+        taskName.getAttribute('task-name-id')
+        {{!-- editFormDisplay.classList.remove('d-none') --}}
+        console.log(taskName.getAttribute('task-name-id'))
+        
+        {{!-- editTaskId = editBtn.getAttribute('edit-id') --}}
+        {{!-- editForm.action = `/${editTaskId}?_method=PUT` --}}
+        {{!-- editForm.submit() --}}
+    }))
+
+    deleteBtns.forEach(deleteBtn => deleteBtn.addEventListener('click', () => {
+        deleteTaskId = deleteBtn.getAttribute('delete-id')
+        deleteForm.action = `/${deleteTaskId}?_method=DELETE`
         deleteForm.submit()
-    })
+    }))
 </script>
