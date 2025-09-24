@@ -1,11 +1,12 @@
-<div class="my-4">
-    <h3>To-do List</h3>
+<div class="my-4 w-50 m-auto" style="min-height: 50vh;">
+    <h3 class="text-center fw-bold">To-do List</h3>
     
     <form method="POST" action="/">
-        <div class="my-4">
+        <div class="my-4 d-flex justify-content-center align-items-center">
             <input 
             type="text" 
             name="name" 
+            class="d-flex flex-grow-1 p-2 border-0 border-bottom" 
             id="" 
             placeholder="Add new task ..."
             required>
@@ -18,13 +19,14 @@
 
     {{#each list}}
         <tbody>
-            <tr>
+            <tr class="d-flex justify-content-center align-items-center">
                 <td>
                     <input type="checkbox" name="" id="" checkbox-input-id="{{this._id}}">
                 </td>
-                <td>
+                <td class="flex-grow-1">
                     <label 
                     for="{{this._id}}" 
+                    class="fw-bold" 
                     task-name-id="{{this._id}}">{{this.name}}</label>
 
                     <div class="d-none" edit-form-id="{{this._id}}">
@@ -33,7 +35,11 @@
                         name="edit-form" 
                         action="" 
                         input-form-id="{{this._id}}">
-                            <input type="text" name="name" required>
+                            <input 
+                            type="text" 
+                            name="name" 
+                            class="w-100 p-2 border-0 border-bottom" 
+                            required>
                             <button type="submit" hidden></button>
                         </form>
                     </div>
