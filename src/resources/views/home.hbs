@@ -1,4 +1,4 @@
-<div class="my-4 w-50 m-auto" style="min-height: 50vh;">
+<div class="my-4 w-50 m-auto" style="min-height: 80vh;">
     <h3 class="text-center fw-bold">To-do List</h3>
     
     <form method="POST" action="/">
@@ -6,7 +6,7 @@
             <input 
             type="text" 
             name="name" 
-            class="d-flex flex-grow-1 p-2 border-0 border-bottom" 
+            class="w-100 p-2 border-0 border-bottom" 
             id="" 
             placeholder="Add new task ..."
             required>
@@ -20,7 +20,7 @@
     {{#each list}}
         <tbody>
             <tr class="d-flex justify-content-center align-items-center">
-                <td>
+                <td class="ps-0">
                     <input type="checkbox" name="" id="" checkbox-input-id="{{this._id}}">
                 </td>
                 <td class="flex-grow-1">
@@ -44,7 +44,7 @@
                         </form>
                     </div>
                 </td>
-                <td>
+                <td class="pe-0">
                     <span>
                         <button 
                         type="submit" 
@@ -55,6 +55,11 @@
                         type="submit" 
                         class="btn btn-link d-none"
                         update-id="{{this._id}}">Update</button>
+
+                        <button 
+                        type="submit" 
+                        class="btn btn-link d-none"
+                        cancel-id="{{this._id}}">Cancel</button>
 
                         <button 
                         type="submit" 
@@ -75,11 +80,14 @@
     const inputCheckBoxs = document.querySelectorAll('input[checkbox-input-id]')
 
     const taskNames = document.querySelectorAll('label[task-name-id]')
+
     const editFormsDisplay = document.querySelectorAll('div[edit-form-id]')
     const editBtns = document.querySelectorAll('button[edit-id]')
     const updateBtns = document.querySelectorAll('button[update-id]')
 
     const editForms = document.querySelectorAll('form[input-form-id]')
+
+    const cancelBtns = document.querySelectorAll('button[cancel-id]')
 
     const deleteBtns = document.querySelectorAll('button[delete-id]')
     const deleteForm = document.forms['delete-form']
@@ -99,40 +107,52 @@
         })
     })
 
-    editForms.forEach(editForm => {
-        editForm.addEventListener('keydown', e => {
-            if (e.key === 'Enter') {
-            e.preventDefault()
-            }
-        })
-    })
-
     editBtns.forEach(editBtn => editBtn.addEventListener('click', () => {
         taskNames.forEach(taskName => {
             editFormsDisplay.forEach(editFormDisplay => {
                 updateBtns.forEach(updateBtn => {
-                    if(editBtn.getAttribute('edit-id') === taskName.getAttribute('task-name-id') && 
-                    taskName.getAttribute('task-name-id') === editFormDisplay.getAttribute('edit-form-id') && 
-                    editFormDisplay.getAttribute('edit-form-id') === updateBtn.getAttribute('update-id')) {
-                        editBtn.classList.add('d-none')
-                        taskName.classList.add('d-none')
-                        editFormDisplay.classList.remove('d-none')
-                        updateBtn.classList.remove('d-none')
+                    cancelBtns.forEach(cancelBtn => {
+                        if(editBtn.getAttribute('edit-id') === taskName.getAttribute('task-name-id') && 
+                        taskName.getAttribute('task-name-id') === editFormDisplay.getAttribute('edit-form-id') && 
+                        editFormDisplay.getAttribute('edit-form-id') === updateBtn.getAttribute('update-id') && 
+                        updateBtn.getAttribute('update-id') === cancelBtn.getAttribute('cancel-id')) {
+                            editBtn.classList.add('d-none')
+                            taskName.classList.add('d-none')
+                            editFormDisplay.classList.remove('d-none')
+                            updateBtn.classList.remove('d-none')
+                            cancelBtn.classList.remove('d-none')
 
-                        updateBtn.addEventListener('click', () => {
-                            updateTaskId = updateBtn.getAttribute('update-id')
-                            editForms.forEach(editForm => {
-                                if(updateTaskId === editForm.getAttribute('input-form-id')) {
-                                    editForm.action = `/${updateTaskId}?_method=PUT`
-                                    if (typeof editForm.requestSubmit === 'function') {
-                                        editForm.requestSubmit()
-                                    } else {
-                                        editForm.submit()
-                                    }
-                                }
+                            cancelBtn.addEventListener('click', () => {
+                                editBtn.classList.remove('d-none')
+                                taskName.classList.remove('d-none')
+                                editFormDisplay.classList.add('d-none')
+                                updateBtn.classList.add('d-none')
+                                cancelBtn.classList.add('d-none')
                             })
-                        })
-                    }
+
+                            editForms.forEach(editForm => {
+                                editForm.addEventListener('keydown', e => {
+                                    if (e.key === 'Enter') {
+                                    e.preventDefault()
+                                    }
+                                })
+                            })
+
+                            updateBtn.addEventListener('click', () => {
+                                updateTaskId = updateBtn.getAttribute('update-id')
+                                editForms.forEach(editForm => {
+                                    if(updateTaskId === editForm.getAttribute('input-form-id')) {
+                                        editForm.action = `/${updateTaskId}?_method=PUT`
+                                        if (typeof editForm.requestSubmit === 'function') {
+                                            editForm.requestSubmit()
+                                        } else {
+                                            editForm.submit()
+                                        }
+                                    }
+                                })
+                            })
+                        }
+                    })
                 })
             })
         })
