@@ -7,7 +7,8 @@
             type="text" 
             name="name" 
             id="" 
-            placeholder="Add new task ...">
+            placeholder="Add new task ..."
+            required>
             <button type="submit" class="btn btn-link">Add</button>
         </div>
     </form>
@@ -19,7 +20,7 @@
         <tbody>
             <tr>
                 <td>
-                    <input type="checkbox" name="" id="{{this._id}}">
+                    <input type="checkbox" name="" id="" checkbox-input-id="{{this._id}}">
                 </td>
                 <td>
                     <label 
@@ -27,8 +28,13 @@
                     task-name-id="{{this._id}}">{{this.name}}</label>
 
                     <div class="d-none" edit-form-id="{{this._id}}">
-                        <form method="POST" name="edit-form" action="">
-                            <input type="text" name="" id="">
+                        <form 
+                        method="POST" 
+                        name="edit-form" 
+                        action="" 
+                        input-form-id="{{this._id}}">
+                            <input type="text" name="name" required>
+                            <button type="submit" hidden></button>
                         </form>
                     </div>
                 </td>
@@ -59,34 +65,67 @@
 <form method="POST" name="delete-form" action=""></form>
 
 <script>
-    var editTaskId
-    var deleteTaskId
-    {{!-- const checkBox = document.querySelector('input[type=checkbox]') --}}
+    var taskNameId, updateTaskId, deleteTaskId
+    const inputCheckBoxs = document.querySelectorAll('input[checkbox-input-id]')
 
     const taskNames = document.querySelectorAll('label[task-name-id]')
     const editFormsDisplay = document.querySelectorAll('div[edit-form-id]')
     const editBtns = document.querySelectorAll('button[edit-id]')
     const updateBtns = document.querySelectorAll('button[update-id]')
-    {{!-- const editForm = document.forms['edit-form'] --}}
+
+    const editForms = document.querySelectorAll('form[input-form-id]')
 
     const deleteBtns = document.querySelectorAll('button[delete-id]')
     const deleteForm = document.forms['delete-form']
+
+    inputCheckBoxs.forEach(inputCheckBox => {
+        inputCheckBox.addEventListener('change', () => {
+            taskNames.forEach(taskName => {
+                taskNameId = taskName.getAttribute('task-name-id')
+                if(taskNameId === inputCheckBox.getAttribute('checkbox-input-id')) {
+                    if(inputCheckBox.checked) {
+                        taskName.classList.add('text-decoration-line-through')
+                    } else {
+                        taskName.classList.remove('text-decoration-line-through')
+                    }
+                }
+            })
+        })
+    })
+
+    editForms.forEach(editForm => {
+        editForm.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+            e.preventDefault()
+            }
+        })
+    })
 
     editBtns.forEach(editBtn => editBtn.addEventListener('click', () => {
         taskNames.forEach(taskName => {
             editFormsDisplay.forEach(editFormDisplay => {
                 updateBtns.forEach(updateBtn => {
-                    if(editBtn.getAttribute('edit-id') === taskName.getAttribute('task-name-id') & 
-                        taskName.getAttribute('task-name-id') === editFormDisplay.getAttribute('edit-form-id') &
-                        editFormDisplay.getAttribute('edit-form-id') === updateBtn.getAttribute('update-id')) {
+                    if(editBtn.getAttribute('edit-id') === taskName.getAttribute('task-name-id') && 
+                    taskName.getAttribute('task-name-id') === editFormDisplay.getAttribute('edit-form-id') && 
+                    editFormDisplay.getAttribute('edit-form-id') === updateBtn.getAttribute('update-id')) {
                         editBtn.classList.add('d-none')
                         taskName.classList.add('d-none')
                         editFormDisplay.classList.remove('d-none')
                         updateBtn.classList.remove('d-none')
-                        
-                        {{!-- editTaskId = editBtn.getAttribute('edit-id') --}}
-                        {{!-- editForm.action = `/${editTaskId}?_method=PUT` --}}
-                        {{!-- editForm.submit() --}}
+
+                        updateBtn.addEventListener('click', () => {
+                            updateTaskId = updateBtn.getAttribute('update-id')
+                            editForms.forEach(editForm => {
+                                if(updateTaskId === editForm.getAttribute('input-form-id')) {
+                                    editForm.action = `/${updateTaskId}?_method=PUT`
+                                    if (typeof editForm.requestSubmit === 'function') {
+                                        editForm.requestSubmit()
+                                    } else {
+                                        editForm.submit()
+                                    }
+                                }
+                            })
+                        })
                     }
                 })
             })

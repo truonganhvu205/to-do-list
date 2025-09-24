@@ -17,7 +17,12 @@ class SiteController {
             .catch(next)
     }
 
-    // POST /:id
+    // PUT /:id
+    update(req, res, next) {
+        ToDo.updateOne({_id: req.params.id}, req.body)
+            .then(() => res.redirect('/'))
+            .catch(next)
+    }
 
     // DELETE /:id
     delete(req, res, next) {
