@@ -24,10 +24,9 @@
                 <td>
                     <label 
                     for="{{this._id}}" 
-                    id="task-name"
                     task-name-id="{{this._id}}">{{this.name}}</label>
 
-                    <div id="edit-form-display" class="d-none">
+                    <div class="d-none" edit-form-id="{{this._id}}">
                         <form method="POST" name="edit-form" action="">
                             <input type="text" name="" id="">
                         </form>
@@ -39,6 +38,11 @@
                         type="submit" 
                         class="btn btn-link"
                         edit-id="{{this._id}}">Edit</button>
+
+                        <button 
+                        type="submit" 
+                        class="btn btn-link d-none"
+                        update-id="{{this._id}}">Update</button>
 
                         <button 
                         type="submit" 
@@ -59,23 +63,34 @@
     var deleteTaskId
     {{!-- const checkBox = document.querySelector('input[type=checkbox]') --}}
 
-    const taskName = document.querySelector('#task-name')
-    const editFormDisplay = document.querySelector('#edit-form-display')
+    const taskNames = document.querySelectorAll('label[task-name-id]')
+    const editFormsDisplay = document.querySelectorAll('div[edit-form-id]')
     const editBtns = document.querySelectorAll('button[edit-id]')
-    const editForm = document.forms['edit-form']
+    const updateBtns = document.querySelectorAll('button[update-id]')
+    {{!-- const editForm = document.forms['edit-form'] --}}
 
     const deleteBtns = document.querySelectorAll('button[delete-id]')
     const deleteForm = document.forms['delete-form']
 
     editBtns.forEach(editBtn => editBtn.addEventListener('click', () => {
-        {{!-- taskName.classList.add('d-none') --}}
-        taskName.getAttribute('task-name-id')
-        {{!-- editFormDisplay.classList.remove('d-none') --}}
-        console.log(taskName.getAttribute('task-name-id'))
-        
-        {{!-- editTaskId = editBtn.getAttribute('edit-id') --}}
-        {{!-- editForm.action = `/${editTaskId}?_method=PUT` --}}
-        {{!-- editForm.submit() --}}
+        taskNames.forEach(taskName => {
+            editFormsDisplay.forEach(editFormDisplay => {
+                updateBtns.forEach(updateBtn => {
+                    if(editBtn.getAttribute('edit-id') === taskName.getAttribute('task-name-id') & 
+                        taskName.getAttribute('task-name-id') === editFormDisplay.getAttribute('edit-form-id') &
+                        editFormDisplay.getAttribute('edit-form-id') === updateBtn.getAttribute('update-id')) {
+                        editBtn.classList.add('d-none')
+                        taskName.classList.add('d-none')
+                        editFormDisplay.classList.remove('d-none')
+                        updateBtn.classList.remove('d-none')
+                        
+                        {{!-- editTaskId = editBtn.getAttribute('edit-id') --}}
+                        {{!-- editForm.action = `/${editTaskId}?_method=PUT` --}}
+                        {{!-- editForm.submit() --}}
+                    }
+                })
+            })
+        })
     }))
 
     deleteBtns.forEach(deleteBtn => deleteBtn.addEventListener('click', () => {
